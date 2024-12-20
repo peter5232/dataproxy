@@ -166,7 +166,8 @@ class BinaryFileRead : public FileHelpRead {
       std::vector<std::shared_ptr<arrow::Array>> arrays(1);
       CHECK_ARROW_OR_THROW(binary_build.Finish(&arrays[0]));
       *record_batch =
-          arrow::RecordBatch::Make(this->Schema(), arrays.size(), arrays);
+          arrow::RecordBatch::Make(this->Schema(), arrays[0]->length(), arrays);
+      CHECK_ARROW_OR_THROW((*record_batch)->Validate());
     }
   }
   void DoClose() { CHECK_ARROW_OR_THROW(read_stream_->Close()); }

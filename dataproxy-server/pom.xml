@@ -7,71 +7,68 @@
         <groupId>org.secretflow</groupId>
         <artifactId>dataproxy</artifactId>
         <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>dataproxy-server</artifactId>
+    <packaging>jar</packaging>
 
     <dependencies>
+
         <dependency>
             <groupId>org.secretflow</groupId>
-            <artifactId>dataproxy-manager</artifactId>
+            <artifactId>dataproxy-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.secretflow</groupId>
-            <artifactId>dataproxy-service</artifactId>
+            <artifactId>dataproxy-plugin-odps</artifactId>
         </dependency>
 
         <!-- common start -->
-        <dependency>
+<!--        <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
-        </dependency>
+        </dependency>-->
+
         <!-- common end -->
 
-        <!-- aop start -->
         <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjweaver</artifactId>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjrt</artifactId>
-        </dependency>
-        <!-- aop end -->
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
         </dependency>
-        <!--implementation-->
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin.version}</version>
                 <configuration>
-                    <outputDirectory>../target</outputDirectory>
-                    <finalName>dataproxy</finalName>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>libs/</classpathPrefix>
+                            <mainClass>
+                                org.secretflow.dataproxy.server.DataProxyServerApplication
+                            </mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>
-        <testResources>
-            <testResource>
-                <directory>../config</directory>
-                <targetPath>${project.basedir}/config</targetPath>
-            </testResource>
-            <testResource>
-                <directory>../scripts/test</directory>
-                <targetPath>${project.basedir}/config</targetPath>
-            </testResource>
-        </testResources>
     </build>
+
 
 </project>

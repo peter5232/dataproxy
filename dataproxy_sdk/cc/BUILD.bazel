@@ -23,6 +23,7 @@ dataproxy_cc_library(
     ],
     deps = [
         ":data_proxy_file",
+        ":data_proxy_stream",
     ],
 )
 
@@ -92,6 +93,19 @@ dataproxy_cc_library(
     ],
 )
 
+dataproxy_cc_library(
+    name = "data_proxy_stream",
+    srcs = ["data_proxy_stream.cc"],
+    hdrs = ["data_proxy_stream.h"],
+    deps = [
+        ":data_proxy_conn",
+        ":exception",
+        ":proto",
+        ":utils",
+        "@org_apache_arrow//:arrow_flight",
+    ],
+)
+
 dataproxy_cc_test(
     name = "file_help_test",
     srcs = ["file_help_test.cc"],
@@ -128,5 +142,15 @@ dataproxy_cc_test(
     srcs = ["data_proxy_pb_test.cc"],
     deps = [
         ":proto",
+    ],
+)
+
+dataproxy_cc_test(
+    name = "data_proxy_stream_test",
+    srcs = ["data_proxy_stream_test.cc"],
+    deps = [
+        ":data_proxy_stream",
+        "//dataproxy_sdk/test:data_mesh_mock",
+        "//dataproxy_sdk/test:random",
     ],
 )

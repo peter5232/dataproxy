@@ -26,8 +26,8 @@ exports_files(
 )
 
 pybind_extension(
-    name = "libdataproxy",
-    srcs = ["libdataproxy.cc"],
+    name = "_lib",
+    srcs = ["_lib.cc"],
     linkopts = select({
         "@bazel_tools//src/conditions:darwin": [
             "-Wl,-exported_symbols_list,$(location :exported_symbols.lds)",
@@ -43,20 +43,37 @@ pybind_extension(
     ],
 )
 
+filegroup(
+    name = "lib_so",
+    srcs = [
+        ":_lib.so",
+    ],
+)
+
 py_library(
     name = "data_proxy_file_py",
     srcs = [
-        "dp_file_adapter.py",
+        "file_adapter.py",
     ],
     data = [
-        ":libdataproxy.so",
+        ":lib_so",
+    ],
+)
+
+py_library(
+    name = "data_proxy_stream_py",
+    srcs = [
+        "stream.py",
+    ],
+    data = [
+        ":lib_so",
     ],
 )
 
 py_library(
     name = "protos",
     srcs = [
-        "dp_pb2.py",
+        "proto.py",
         "//dataproxy_sdk/proto:data_proxy_proto_py",
     ],
 )
@@ -66,9 +83,10 @@ py_library(
     srcs = [
         "__init__.py",
         ":data_proxy_file_py",
+        ":data_proxy_stream_py",
         ":protos",
     ],
     data = [
-        ":libdataproxy.so",
+        ":lib_so",
     ],
 )

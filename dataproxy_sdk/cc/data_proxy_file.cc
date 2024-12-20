@@ -31,7 +31,7 @@ namespace dataproxy_sdk {
 
 class DataProxyFile::Impl {
  public:
-  void Init(const proto::DataProxyConfig &config) {
+  void Init(const proto::DataProxyConfig& config) {
     arrow::flight::FlightClientOptions options =
         arrow::flight::FlightClientOptions::Defaults();
     if (config.has_tls_config()) {
@@ -47,7 +47,7 @@ class DataProxyFile::Impl {
                                       config.has_tls_config(), options);
   }
 
-  FileHelpWrite::Options BuildWriteOptions(const proto::DownloadInfo &info) {
+  FileHelpWrite::Options BuildWriteOptions(const proto::DownloadInfo& info) {
     FileHelpWrite::Options options = FileHelpWrite::Options::Defaults();
     if (info.has_orc_info()) {
       options.compression =
@@ -58,8 +58,8 @@ class DataProxyFile::Impl {
     return options;
   }
 
-  void DownloadFile(const proto::DownloadInfo &info,
-                    const std::string &file_path,
+  void DownloadFile(const proto::DownloadInfo& info,
+                    const std::string& file_path,
                     proto::FileFormat file_format) {
     // 1. 从dm获取dp信息
     auto any = BuildDownloadAny(info, file_format);
@@ -91,15 +91,15 @@ class DataProxyFile::Impl {
     file_write->DoClose();
   }
 
-  FileHelpRead::Options BuildReadOptions(const proto::UploadInfo &info) {
+  FileHelpRead::Options BuildReadOptions(const proto::UploadInfo& info) {
     FileHelpRead::Options options = FileHelpRead::Options::Defaults();
-    for (auto &column : info.columns()) {
+    for (auto& column : info.columns()) {
       options.column_types.emplace(column.name(), GetDataType(column.type()));
     }
     return options;
   }
 
-  void DoUpload(const proto::UploadInfo &info, const std::string &file_path,
+  void DoUpload(const proto::UploadInfo& info, const std::string& file_path,
                 proto::FileFormat file_format) {
     // 2. 通过dm返回的dp信息连接dp
     auto any = BuildUploadAny(info, file_format);
@@ -148,7 +148,7 @@ class DataProxyFile::Impl {
     file_read->DoClose();
   }
 
-  void CreateDomainData(proto::UploadInfo &info,
+  void CreateDomainData(proto::UploadInfo& info,
                         proto::FileFormat file_format) {
     auto action_msg = BuildActionCreateDomainDataRequest(info, file_format);
     arrow::flight::Action action{
@@ -163,13 +163,14 @@ class DataProxyFile::Impl {
     CHECK_RESP_OR_THROW(response);
     if (info.domaindata_id().empty()) {
       info.set_domaindata_id(response.data().domaindata_id());
+      SPDLOG_INFO("DP create domaindata id:{}", info.domaindata_id());
     } else if (response.data().domaindata_id() != info.domaindata_id()) {
       DATAPROXY_THROW("domaindata id error, request:{}, response:{}",
                       info.domaindata_id(), response.data().domaindata_id());
     }
   }
 
-  void DeleteDomainData(const proto::UploadInfo &info) {
+  void DeleteDomainData(const proto::UploadInfo& info) {
     auto action_request = BuildActionDeleteDomainDataRequest(info);
     arrow::flight::Action action{
         "ActionDeleteDomainDataRequest",
@@ -177,16 +178,18 @@ class DataProxyFile::Impl {
     auto result = dp_conn_->DoAction(action);
   }
 
-  void UploadFile(proto::UploadInfo &info, const std::string &file_path,
+  void UploadFile(proto::UploadInfo& info, const std::string& file_path,
                   proto::FileFormat file_format) {
-    dataproxy_sdk::CheckUploadInfo(info);
+    CheckUploadInfo(info);
     CreateDomainData(info, file_format);
     try {
       DoUpload(info, file_path, file_format);
     } catch (...) {
       try {
         DeleteDomainData(info);
-      } catch (const std::exception &e) {
+        SPDLOG_WARN("file upload error. upload_info:{}",
+                    info.SerializeAsString());
+      } catch (const std::exception& e) {
         SPDLOG_WARN("DeleteDomainData error. msg:{}", e.what());
       }
       throw;
@@ -200,7 +203,7 @@ class DataProxyFile::Impl {
 };
 
 std::unique_ptr<DataProxyFile> DataProxyFile::Make(
-    const proto::DataProxyConfig &config) {
+    const proto::DataProxyConfig& config) {
   proto::DataProxyConfig dp_config;
   dp_config.CopyFrom(config);
   GetDPConfigValueFromEnv(&dp_config);
@@ -221,14 +224,14 @@ DataProxyFile::DataProxyFile() {
 
 DataProxyFile::~DataProxyFile() = default;
 
-void DataProxyFile::DownloadFile(const proto::DownloadInfo &info,
-                                 const std::string &file_path,
+void DataProxyFile::DownloadFile(const proto::DownloadInfo& info,
+                                 const std::string& file_path,
                                  proto::FileFormat file_format) {
   impl_->DownloadFile(info, file_path, file_format);
 }
 
-void DataProxyFile::UploadFile(proto::UploadInfo &info,
-                               const std::string &file_path,
+void DataProxyFile::UploadFile(proto::UploadInfo& info,
+                               const std::string& file_path,
                                proto::FileFormat file_format) {
   impl_->UploadFile(info, file_path, file_format);
 }

@@ -12,5 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .dp_file_adapter import *
-from .dp_pb2 import *
+from dataproxy.file_adapter import *
+from dataproxy.proto import *
+from dataproxy.stream import *
+
+DataProxyFileAdapter = FileAdapter

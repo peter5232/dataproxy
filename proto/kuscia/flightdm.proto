@@ -16,7 +16,6 @@ syntax = "proto3";
 
 package kuscia.proto.api.v1alpha1.datamesh;
 
-import "kuscia/common.proto";
 import "kuscia/domaindata.proto";
 import "kuscia/domaindatasource.proto";
 
@@ -136,4 +135,10 @@ message ActionCreateDomainDataSourceRequest {
 
 message ActionCreateDomainDataSourceResponse {
   CreateDomainDataSourceResponse response = 1;
+}
+
+message CommandDataSourceSqlQuery {
+  string datasource_id = 1;
+  // only support select sql
+  string sql = 2;
 }

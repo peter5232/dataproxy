@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 
@@ -55,10 +56,10 @@ def _kuscia():
         http_archive,
         name = "kuscia",
         urls = [
-            "https://github.com/secretflow/kuscia/archive/refs/tags/v0.11.0b0.tar.gz",
+            "https://github.com/secretflow/kuscia/archive/refs/tags/v0.13.0b0.tar.gz",
         ],
-        strip_prefix = "kuscia-0.11.0b0",
-        sha256 = "c8de425a5f442ba3fa30a9b5943f9fd056efd9ab610ddc2168d5ffcf71224974",
+        strip_prefix = "kuscia-0.13.0b0",
+        sha256 = "8c7b638ef510a665af12f7b92ed0c43de7712154234e52ef4d8609b8afebfdac",
     )
 
 def _bazel_rules_pkg():

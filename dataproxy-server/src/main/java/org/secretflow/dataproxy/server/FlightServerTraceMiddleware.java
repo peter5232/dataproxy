@@ -16,14 +16,18 @@
 
 package org.secretflow.dataproxy.server;
 
+import org.apache.arrow.flight.CallHeaders;
+import org.apache.arrow.flight.CallInfo;
+import org.apache.arrow.flight.CallStatus;
+import org.apache.arrow.flight.FlightServerMiddleware;
+import org.apache.arrow.flight.RequestContext;
 import org.secretflow.dataproxy.common.utils.IdUtils;
-
-import org.apache.arrow.flight.*;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
 
+import java.util.Objects;
+
 /**
- * trace_id中间件
+ * trace_id - oriented middleware
  *
  * @author muhong
  * @date 2023-09-25 14:39
@@ -55,10 +59,10 @@ public class FlightServerTraceMiddleware implements FlightServerMiddleware {
     public static class FlightServerTraceMiddlewareFactory implements Factory<FlightServerTraceMiddleware> {
         @Override
         public FlightServerTraceMiddleware onCallStarted(CallInfo info, CallHeaders incomingHeaders, RequestContext context) {
-            // 设置调用链路 Trace ID
+            // Set the call link: Trace ID
             String traceId = incomingHeaders.get(TRACE_ID_KEY);
-            // 如果未传入 trace id 则生成一个
-            if (StringUtils.isEmpty(traceId)) {
+            // If no trace id is passed, one is generated
+            if (Objects.isNull(traceId) || traceId.isEmpty()) {
                 traceId = GENERATE_TRACE_ID_PREFIX + "-" + IdUtils.createRandString(32);
             }
             MDC.put("TraceId", traceId);

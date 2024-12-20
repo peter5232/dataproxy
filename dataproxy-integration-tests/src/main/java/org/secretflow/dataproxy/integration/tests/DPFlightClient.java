@@ -79,7 +79,7 @@ public class DPFlightClient {
                          ArrowStreamWriter writer = new ArrowStreamWriter(vectorSchemaRootReceived, null, Channels.newChannel(out))) {
                         writer.start();
                         writer.writeBatch();
-                        System.out.println(vectorSchemaRootReceived.contentToTSVString());
+//                        System.out.println(vectorSchemaRootReceived.contentToTSVString());
                     }
                 }
             } catch (Exception e) {

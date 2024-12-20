@@ -20,9 +20,10 @@ WORKDIR /app
 # fix: RunP proot + java bug
 RUN ln -s ${JAVA_HOME}/lib/libjli.so /lib64
 
-COPY target/*.jar dataproxy.jar
-COPY config/application.yaml application.yaml
-COPY scripts/start_dp.sh start_dp.sh
-ENV JAVA_OPTS="" SPRING_PROFILES_ACTIVE="default"
+COPY dataproxy-server/target/dataproxy-server-0.0.1-SNAPSHOT.jar dataproxy.jar
+COPY libs/*.jar libs/
+
+ENV JAVA_OPTS=""
+ENV LOG_LEVEL=INFO
 EXPOSE 8023
-ENTRYPOINT ${JAVA_HOME}/bin/java ${JAVA_OPTS} -Dsun.net.http.allowRestrictedHeaders=true --add-opens=java.base/java.nio=ALL-UNNAMED -jar -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE} ./dataproxy.jar
+ENTRYPOINT ${JAVA_HOME}/bin/java ${JAVA_OPTS} -Dsun.net.http.allowRestrictedHeaders=true --add-opens=java.base/java.nio=ALL-UNNAMED -jar ./dataproxy.jar

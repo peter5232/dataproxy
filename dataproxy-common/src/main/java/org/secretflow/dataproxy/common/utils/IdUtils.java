@@ -16,9 +16,6 @@
 
 package org.secretflow.dataproxy.common.utils;
 
-import okio.ByteString;
-import org.apache.commons.lang3.StringUtils;
-
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
@@ -39,16 +36,16 @@ public class IdUtils {
     private static final String idLetters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     /**
-     * 随机串长度
+     * Random string length
      */
     private static final int idLen = 8;
 
     /**
-     * 生成ID
+     * Generate ID with prefix and splitter
      *
      * @param prefix,   前缀
      * @param splitter, 分隔符
-     * @return
+     * @return ID
      */
     public static String createId(String prefix, String splitter) {
         String dateText;
@@ -78,19 +75,6 @@ public class IdUtils {
      */
     public static String randomUUID() {
         return UUID.randomUUID().toString().replace("-", "");
-    }
-
-    /**
-     * 多个id生成联合id
-     *
-     * @param ids
-     * @return
-     */
-    public static String combineIds(String... ids) {
-        return ByteString
-            .encodeUtf8(StringUtils.join(ids, "|"))
-            .sha256()
-            .hex();
     }
 
     /**

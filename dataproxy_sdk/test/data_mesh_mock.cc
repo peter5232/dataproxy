@@ -19,6 +19,7 @@
 
 #include "arrow/flight/api.h"
 #include "arrow/table.h"
+#include "spdlog/spdlog.h"
 
 namespace dataproxy_sdk {
 
@@ -31,6 +32,7 @@ class DataMeshMockServer : public arrow::flight::FlightServerBase {
       const arrow::flight::ServerCallContext &,
       const arrow::flight::FlightDescriptor &descriptor,
       std::unique_ptr<arrow::flight::FlightInfo> *info) override {
+    SPDLOG_INFO("GetFlightInfo:{}", descriptor.ToString());
     ARROW_ASSIGN_OR_RAISE(auto flight_info, MakeFlightInfo());
     *info = std::unique_ptr<arrow::flight::FlightInfo>(
         new arrow::flight::FlightInfo(std::move(flight_info)));
@@ -55,11 +57,14 @@ class DataMeshMockServer : public arrow::flight::FlightServerBase {
     std::shared_ptr<arrow::RecordBatchReader> owning_reader;
     std::shared_ptr<arrow::Schema> schema;
 
-    if (table_) {
-      arrow::TableBatchReader batch_reader(*table_);
-      ARROW_ASSIGN_OR_RAISE(batches, batch_reader.ToRecordBatches());
-      schema = table_->schema();
+    if (!table_) {
+      return arrow::Status::Invalid("mock don't have data.");
     }
+
+    arrow::TableBatchReader batch_reader(*table_);
+    ARROW_ASSIGN_OR_RAISE(batches, batch_reader.ToRecordBatches());
+    schema = table_->schema();
+
     ARROW_ASSIGN_OR_RAISE(owning_reader, arrow::RecordBatchReader::Make(
                                              std::move(batches), schema));
     *stream = std::unique_ptr<arrow::flight::FlightDataStream>(

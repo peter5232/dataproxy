@@ -28,10 +28,18 @@ namespace dm_proto = kuscia::proto::api::v1alpha1::datamesh;
 namespace kuscia_proto = kuscia::proto::api::v1alpha1;
 
 google::protobuf::Any BuildDownloadAny(const proto::DownloadInfo& info,
+                                       proto::ContentType content_type);
+
+google::protobuf::Any BuildDownloadAny(const proto::DownloadInfo& info,
                                        proto::FileFormat file_format);
 
 google::protobuf::Any BuildUploadAny(const proto::UploadInfo& info,
+                                     proto::ContentType content_type);
+
+google::protobuf::Any BuildUploadAny(const proto::UploadInfo& info,
                                      proto::FileFormat file_format);
+
+google::protobuf::Any BuildSQLAny(const proto::SQLInfo& info);
 
 proto::CreateDomainDataRequest BuildActionCreateDomainDataRequest(
     const proto::UploadInfo& info, proto::FileFormat file_format);

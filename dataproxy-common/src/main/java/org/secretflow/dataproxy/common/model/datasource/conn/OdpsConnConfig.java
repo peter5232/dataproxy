@@ -17,8 +17,12 @@
 package org.secretflow.dataproxy.common.model.datasource.conn;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.secretflow.dataproxy.common.serializer.SensitiveDataSerializer;
 
 /**
@@ -38,21 +42,18 @@ public class OdpsConnConfig implements ConnConfig {
     /**
      * access key id
      */
-    @NotBlank
     @JsonSerialize(using = SensitiveDataSerializer.class)
     private String accessKeyId;
 
     /**
      * access key secret
      */
-    @NotBlank
     @JsonSerialize(using = SensitiveDataSerializer.class)
     private String accessKeySecret;
 
     /**
      * endpoint
      */
-    @NotBlank
     private String endpoint;
 
     /**

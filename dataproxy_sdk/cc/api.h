@@ -15,3 +15,4 @@
 #pragma once
 
 #include "dataproxy_sdk/cc/data_proxy_file.h"
+#include "dataproxy_sdk/cc/data_proxy_stream.h"

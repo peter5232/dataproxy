@@ -30,7 +30,7 @@ const std::string kORCFilePath = "test.orc";
 const std::string kBianryFilePath = "test.txt";
 
 template <typename T>
-std::unique_ptr<T> GetDefaultFileHelp(const std::string &file_path) {
+std::unique_ptr<T> GetDefaultFileHelp(const std::string& file_path) {
   auto options = T::Options::Defaults();
   auto ret = T::Make(GetFileFormat(file_path), file_path, options);
   return ret;
@@ -206,6 +206,38 @@ TEST(FileHelpTestWithOption, ErrorORC) {
   auto reader = FileHelpRead::Make(GetFileFormat(kORCFilePath), kORCFilePath,
                                    GetErrorOptions());
   EXPECT_THROW(reader->DoRead(&read_batch), yacl::Exception);
+}
+
+void System(const std::string& cmd) { ASSERT_TRUE(system(cmd.c_str()) == 0); }
+
+TEST(FileHelpTest, LargeBinaryRead) {
+  const std::string kLargeBinaryFile = "large_file.txt";
+  System("dd if=/dev/urandom of=large_file.txt bs=1M count=1");
+  auto reader = GetDefaultFileHelp<FileHelpRead>(kLargeBinaryFile);
+  while (1) {
+    std::shared_ptr<arrow::RecordBatch> read_batch;
+    reader->DoRead(&read_batch);
+    if (!read_batch) break;
+  }
+
+  reader->DoClose();
+}
+
+TEST(FileHelpTest, LargeBinary) {
+  System("dd if=/dev/urandom of=large_file_source.txt bs=10M count=1");
+
+  auto writer = GetDefaultFileHelp<FileHelpWrite>("large_file_equal.txt");
+  auto reader = GetDefaultFileHelp<FileHelpRead>("large_file_source.txt");
+  while (1) {
+    std::shared_ptr<arrow::RecordBatch> read_batch;
+    reader->DoRead(&read_batch);
+    if (!read_batch) break;
+    writer->DoWrite(read_batch);
+  }
+  writer->DoClose();
+  reader->DoClose();
+
+  System("diff large_file_source.txt large_file_equal.txt");
 }
 
 }  // namespace dataproxy_sdk

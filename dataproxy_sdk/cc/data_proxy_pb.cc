@@ -46,29 +46,49 @@ inline kuscia_proto::FileFormat ChangeToKusciaFileFormat(
 }
 
 google::protobuf::Any BuildDownloadAny(const proto::DownloadInfo& info,
-                                       proto::FileFormat file_format) {
-  google::protobuf::Any any;
+                                       proto::ContentType content_type) {
   proto::CommandDomainDataQuery msg;
   msg.set_domaindata_id(info.domaindata_id());
   msg.set_partition_spec(info.partition_spec());
-  msg.set_content_type(FormatToContentType(file_format));
+  msg.set_content_type(content_type);
 
+  google::protobuf::Any any;
+  any.PackFrom(msg);
+  return any;
+}
+
+google::protobuf::Any BuildDownloadAny(const proto::DownloadInfo& info,
+                                       proto::FileFormat file_format) {
+  return BuildDownloadAny(info, FormatToContentType(file_format));
+}
+
+google::protobuf::Any BuildUploadAny(const proto::UploadInfo& info,
+                                     proto::ContentType content_type) {
+  proto::CommandDomainDataUpdate msg;
+  msg.set_domaindata_id(info.domaindata_id());
+  msg.set_content_type(content_type);
+  if (content_type != proto::ContentType::RAW) {
+    msg.mutable_file_write_options()
+        ->mutable_csv_options()
+        ->set_field_delimiter(",");
+  }
+
+  google::protobuf::Any any;
   any.PackFrom(msg);
   return any;
 }
 
 google::protobuf::Any BuildUploadAny(const proto::UploadInfo& info,
                                      proto::FileFormat file_format) {
-  google::protobuf::Any any;
-  proto::CommandDomainDataUpdate msg;
-  msg.set_domaindata_id(info.domaindata_id());
-  msg.set_content_type(FormatToContentType(file_format));
-  if (file_format != proto::FileFormat::BINARY) {
-    msg.mutable_file_write_options()
-        ->mutable_csv_options()
-        ->set_field_delimiter(",");
-  }
+  return BuildUploadAny(info, FormatToContentType(file_format));
+}
 
+google::protobuf::Any BuildSQLAny(const proto::SQLInfo& info) {
+  proto::CommandDataSourceSqlQuery msg;
+  msg.set_datasource_id(info.datasource_id());
+  msg.set_sql(info.sql());
+
+  google::protobuf::Any any;
   any.PackFrom(msg);
   return any;
 }

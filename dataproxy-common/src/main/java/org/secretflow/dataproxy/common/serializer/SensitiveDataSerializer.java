@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
 
 /**
- * json 序列化字段脱敏器
+ * json serialization field desensitize
  *
  * @author yuexie
  * @date 2024-07-08

@@ -12,8 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from . import sdk
+from .file_adapter import FileAdapter
+from .proto import (
+    DataProxyConfig,
+    DownloadInfo,
+    UploadInfo,
+    FileFormat,
+    TlSConfig,
+    DataColumn,
+)
+from .stream import StreamReader, StreamWriter, Stream
 
-__all__ = [
-    "sdk",
-]
+DataProxyFileAdapter = FileAdapter

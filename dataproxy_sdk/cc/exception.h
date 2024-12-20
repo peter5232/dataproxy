@@ -24,12 +24,12 @@ namespace dataproxy_sdk {
 
 #define DATAPROXY_ENFORCE_EQ(...) YACL_ENFORCE_EQ(__VA_ARGS__)
 
-#define CHECK_ARROW_OR_THROW(statement)  \
-  do {                                   \
-    auto __s__ = (statement);            \
-    if (!__s__.ok()) {                   \
-      DATAPROXY_THROW(__s__.ToString()); \
-    }                                    \
+#define CHECK_ARROW_OR_THROW(statement)        \
+  do {                                         \
+    auto __s__ = (statement);                  \
+    if (!__s__.ok()) {                         \
+      DATAPROXY_THROW("{}", __s__.ToString()); \
+    }                                          \
   } while (false)
 
 #define CHECK_RESP_OR_THROW(resp)             \
@@ -41,22 +41,22 @@ namespace dataproxy_sdk {
   } while (false)
 
 // For StatusOr from Asylo.
-#define ASSIGN_ARROW_OR_THROW(lhs, rexpr)        \
-  do {                                           \
-    auto __s__ = (rexpr);                        \
-    if (!__s__.ok()) {                           \
-      DATAPROXY_THROW(__s__.status().message()); \
-    }                                            \
-    lhs = std::move(__s__).ValueOrDie();         \
+#define ASSIGN_ARROW_OR_THROW(lhs, rexpr)               \
+  do {                                                  \
+    auto __s__ = (rexpr);                               \
+    if (!__s__.ok()) {                                  \
+      DATAPROXY_THROW("{}", __s__.status().ToString()); \
+    }                                                   \
+    lhs = std::move(__s__).ValueOrDie();                \
   } while (false)
 
-#define ASSIGN_DP_OR_THROW(lhs, rexpr)                        \
-  auto&& _error_or_value = (rexpr);                           \
-  do {                                                        \
-    if ((__builtin_expect(!!(!(_error_or_value).ok()), 0))) { \
-      DATAPROXY_THROW((_error_or_value).status().message());  \
-    }                                                         \
-  } while (0);                                                \
+#define ASSIGN_DP_OR_THROW(lhs, rexpr)                              \
+  auto&& _error_or_value = (rexpr);                                 \
+  do {                                                              \
+    if ((__builtin_expect(!!(!(_error_or_value).ok()), 0))) {       \
+      DATAPROXY_THROW("{}", (_error_or_value).status().ToString()); \
+    }                                                               \
+  } while (0);                                                      \
   lhs = std::move(_error_or_value).ValueUnsafe();
 
 }  // namespace dataproxy_sdk

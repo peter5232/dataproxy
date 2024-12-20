@@ -21,8 +21,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.secretflow.dataproxy.common.model.datasource.conn.ConnConfig;
-import org.secretflow.dataproxy.common.utils.IdUtils;
-import org.secretflow.dataproxy.common.utils.JsonUtils;
 
 /**
  * Datasource connection config
@@ -46,7 +44,4 @@ public class DatasourceConnConfig {
      */
     private ConnConfig connConfig;
 
-    public String generateUniqueId() {
-        return IdUtils.combineIds(JsonUtils.toJSONString(this));
-    }
 }
