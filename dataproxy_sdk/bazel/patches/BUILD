@@ -11,29 +11,3 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# copied from https://github.com/tensorflow/io/blob/v0.25.0/third_party/bzip2.BUILD
-
-package(default_visibility = ["//visibility:public"])
-
-licenses(["notice"])  # BSD-like license
-
-cc_library(
-    name = "bzip2",
-    srcs = [
-        "blocksort.c",
-        "bzlib.c",
-        "bzlib_private.h",
-        "compress.c",
-        "crctable.c",
-        "decompress.c",
-        "huffman.c",
-        "randtable.c",
-    ],
-    hdrs = [
-        "bzlib.h",
-    ],
-    copts = [
-    ],
-    includes = ["."],
-)

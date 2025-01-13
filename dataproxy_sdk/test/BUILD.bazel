@@ -22,7 +22,7 @@ dataproxy_cc_library(
     hdrs = ["random.h"],
     deps = [
         "//dataproxy_sdk/cc:exception",
-        "@org_apache_arrow//:arrow",
+        "@arrow",
     ],
 )
 
@@ -31,7 +31,7 @@ dataproxy_cc_library(
     srcs = ["data_mesh_mock.cc"],
     hdrs = ["data_mesh_mock.h"],
     deps = [
-        "@org_apache_arrow//:arrow_flight",
+        "@arrow//:arrow_flight",
     ],
 )
 

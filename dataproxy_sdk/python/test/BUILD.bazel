@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+load("@dataproxy_sdk_pip//:requirements.bzl", "requirement")
 load("@pybind11_bazel//:build_defs.bzl", "pybind_extension")
 load("@rules_python//python:defs.bzl", "py_library", "py_test")
 
@@ -49,6 +50,10 @@ py_test(
     deps = [
         ":dm_mock_py",
         "//dataproxy_sdk/python/dataproxy:init",
+        requirement("protobuf"),
+        requirement("pyarrow"),
+        requirement("kuscia"),
+        requirement("numpy"),
     ],
 )
 
@@ -58,5 +63,9 @@ py_test(
     deps = [
         ":dm_mock_py",
         "//dataproxy_sdk/python/dataproxy:init",
+        requirement("protobuf"),
+        requirement("pyarrow"),
+        requirement("kuscia"),
+        requirement("numpy"),
     ],
 )

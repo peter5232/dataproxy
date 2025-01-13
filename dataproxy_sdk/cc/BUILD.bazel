@@ -43,7 +43,7 @@ dataproxy_cc_library(
     hdrs = ["utils.h"],
     deps = [
         ":exception",
-        "@org_apache_arrow//:arrow",
+        "@arrow",
     ],
 )
 
@@ -65,7 +65,7 @@ dataproxy_cc_library(
     deps = [
         ":exception",
         ":proto",
-        "@org_apache_arrow//:arrow",
+        "@arrow",
     ],
 )
 
@@ -75,7 +75,7 @@ dataproxy_cc_library(
     hdrs = ["data_proxy_conn.h"],
     deps = [
         ":exception",
-        "@org_apache_arrow//:arrow_flight",
+        "@arrow//:arrow_flight",
     ],
 )
 
@@ -89,7 +89,8 @@ dataproxy_cc_library(
         ":file_help",
         ":proto",
         ":utils",
-        "@org_apache_arrow//:arrow_flight",
+        "@arrow//:arrow_flight",
+        "@yacl//yacl/utils:scope_guard",
     ],
 )
 
@@ -102,7 +103,7 @@ dataproxy_cc_library(
         ":exception",
         ":proto",
         ":utils",
-        "@org_apache_arrow//:arrow_flight",
+        "@arrow//:arrow_flight",
     ],
 )
 

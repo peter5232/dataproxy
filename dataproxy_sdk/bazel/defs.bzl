@@ -46,18 +46,6 @@ def dataproxy_cmake_external(**attrs):
         attrs["generate_args"] = ["-GNinja"]
     return cmake(**attrs)
 
-def dataproxy_cc_binary(
-        linkopts = [],
-        copts = [],
-        deps = [],
-        **kargs):
-    cc_binary(
-        linkopts = linkopts,
-        copts = copts + _dataproxy_copts(),
-        deps = deps,
-        **kargs
-    )
-
 def dataproxy_cc_library(
         linkopts = [],
         copts = [],
@@ -67,7 +55,7 @@ def dataproxy_cc_library(
         linkopts = linkopts,
         copts = _dataproxy_copts() + copts,
         deps = deps + [
-            "@com_github_gabime_spdlog//:spdlog",
+            "@spdlog//:spdlog",
         ],
         **kargs
     )
@@ -76,17 +64,13 @@ def dataproxy_cc_test(
         linkopts = [],
         copts = [],
         deps = [],
-        linkstatic = True,
         **kwargs):
     cc_test(
-        # -lm for tcmalloc
-        linkopts = linkopts + ["-lm"],
+        linkopts = linkopts,
         copts = _dataproxy_copts() + copts,
-        deps = deps + [
+        deps = [
             # use tcmalloc same as release bins. make them has same behavior on mem.
-            "@com_google_googletest//:gtest_main",
-        ],
-        # static link for tcmalloc
-        linkstatic = True,
+            "@googletest//:gtest_main",
+        ] + deps,
         **kwargs
     )

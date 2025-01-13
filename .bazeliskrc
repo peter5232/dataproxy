@@ -12,28 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-load("@rules_foreign_cc//foreign_cc:defs.bzl", "cmake")
-
-package(default_visibility = ["//visibility:public"])
-
-filegroup(
-    name = "all_srcs",
-    srcs = glob(["**"]),
-)
-
-cmake(
-    name = "snappy",
-    cache_entries = {
-        "SNAPPY_BUILD_TESTS": "OFF",
-        "SNAPPY_BUILD_BENCHMARKS": "OFF",
-        "CMAKE_INSTALL_LIBDIR": "lib",
-    },
-    generate_crosstool_file = False,
-    install_args = [
-        "--prefix $${INSTALLDIR}",
-    ],
-    lib_source = ":all_srcs",
-    out_static_libs = [
-        "libsnappy.a",
-    ],
-)
+USE_BAZEL_VERSION=7.4.1

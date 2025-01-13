@@ -13,8 +13,11 @@
 # limitations under the License.
 
 common --experimental_repo_remote_exec
-common --modify_execution_info=CppLink=+no-remote-cache
+common --experimental_cc_shared_library
 
+common --registry=https://raw.githubusercontent.com/secretflow/bazel-registry/main
+common --registry=https://bcr.bazel.build
+common --registry=https://baidu.github.io/babylon/registry
 
 build --incompatible_new_actions_api=false
 build --copt=-fdiagnostics-color=always
@@ -22,6 +25,7 @@ build --enable_platform_specific_config
 
 build --cxxopt=-std=c++17
 build --host_cxxopt=-std=c++17
+build --linkopt -lm
 
 build:avx --copt=-mavx
 build:avx --host_copt=-mavx
