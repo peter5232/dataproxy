@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-set -e
+#set -e
 
 github_flag=true
 ./scripts/build.sh
@@ -26,7 +26,7 @@ git fetch --tags
 # shellcheck disable=SC2046
 VERSION_TAG="$(git describe --tags $(git rev-list --tags --max-count=1))"
 commit_id=$(git log -n 1 --pretty=oneline | awk '{print $1}' | cut -b 1-6)
-tag=${VERSION_TAG}-${DATETIME}-"${commit_id}"
+tag=${DATETIME}-"${commit_id}"
 local_image=dataproxy:${tag}
 echo "$commit_id"
 
@@ -46,7 +46,7 @@ fi
 if [[ "$github_flag" == "true" ]]; then
 	echo "github_flag is true"
 	docker buildx build \
-		--platform linux/arm64,linux/amd64 \
+		--platform linux/arm64 \
 		--tag "${local_image}" \
 		-f ./build/Dockerfiles/dataproxy.Dockerfile . \
 		--load
