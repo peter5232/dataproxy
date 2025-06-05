@@ -65,7 +65,7 @@ public class HiveRecordSender extends AbstractSender<Record> {
 
     @Override
     protected void toArrowVector(Record record, @Nonnull VectorSchemaRoot root, int takeRecordCount) {
-        log.trace("record: {}, takeRecordCount: {}", metaData, takeRecordCount);
+        log.trace("record: {}, takeRecordCount: {}", record, takeRecordCount);
         try {
             this.initRecordColumn2FieldMap(metaData, tableName);
             Optional<FieldVector> filedVectorOpt;
@@ -78,7 +78,7 @@ public class HiveRecordSender extends AbstractSender<Record> {
             ResultSet columns = metaData.getColumns(null, null, tableName, null);
 
             Optional<FieldVector> first;
-
+            // 根据列名填充root
             while (columns.next()) {
                 String name = columns.getString("COLUMN_NAME");
                 String type = columns.getString("TYPE_NAME");
@@ -89,6 +89,10 @@ public class HiveRecordSender extends AbstractSender<Record> {
                     vector = filedVectorOpt.get();
                     recordColumnValue = record.get(name);
                     arrowTypeID = vector.getField().getType().getTypeID();
+                    if (Objects.isNull(recordColumnValue)) {
+                        vector.setNull(takeRecordCount);
+                        continue;
+                    }
                     ValueConversionStrategy converter = ARROW_TYPE_ID_FIELD_CONSUMER_MAP.get(arrowTypeID);
                     if (converter != null) {
                         converter.convertAndSet(vector, takeRecordCount, recordColumnValue);

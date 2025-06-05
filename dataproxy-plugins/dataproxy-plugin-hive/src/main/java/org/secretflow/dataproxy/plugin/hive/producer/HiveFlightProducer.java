@@ -10,7 +10,7 @@ import org.apache.arrow.memory.RootAllocator;
 import org.apache.arrow.vector.VectorSchemaRoot;
 import org.apache.arrow.vector.ipc.ArrowReader;
 import org.apache.arrow.vector.ipc.message.IpcOption;
-import org.secretflow.dataproxy.plugin.hive.HiveRecordWriter;
+import org.secretflow.dataproxy.plugin.hive.writer.HiveRecordWriter;
 import org.secretflow.dataproxy.plugin.hive.config.HiveCommandConfig;
 import org.secretflow.dataproxy.plugin.hive.config.HiveWriteConfig;
 import org.secretflow.dataproxy.plugin.hive.config.TaskConfig;
@@ -133,11 +133,15 @@ public class HiveFlightProducer extends NoOpFlightProducer implements DataProxyF
             try {
                 if (hiveReader.loadNextBatch()) {
                     listener.putNext();
+                } else{
+                    break;
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
+        listener.completed();
+        log.info("end");
     }
 
     public Runnable acceptPut(
