@@ -307,7 +307,7 @@
             </dependency>
             <dependency>
                 <groupId>org.secretflow</groupId>
-                <artifactId>dataproxy-plugin-hive</artifactId>
+                <artifactId>dataproxy-plugin-database</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <!-- dataproxy package end -->

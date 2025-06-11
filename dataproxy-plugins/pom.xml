@@ -12,7 +12,7 @@
 
     <modules>
         <module>dataproxy-plugin-odps</module>
-        <module>dataproxy-plugin-hive</module>
+        <module>dataproxy-plugin-database</module>
     </modules>
 
     <name>dataproxy-plugins</name>

@@ -42,7 +42,7 @@
 
         <dependency>
             <groupId>org.secretflow</groupId>
-            <artifactId>dataproxy-plugin-hive</artifactId>
+            <artifactId>dataproxy-plugin-database</artifactId>
         </dependency>
 
         <dependency>
