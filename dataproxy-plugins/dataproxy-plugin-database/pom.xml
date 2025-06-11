@@ -11,7 +11,7 @@
     <artifactId>dataproxy-plugin-database</artifactId>
     <packaging>jar</packaging>
 
-    <name>dataproxy-plugin-hive</name>
+    <name>dataproxy-plugin-database</name>
     <url>https://maven.apache.org</url>
 
     <dependencies>
@@ -74,6 +74,10 @@
                 <exclusion>
                     <groupId>ch.qos.logback</groupId>
                     <artifactId>logback-classic</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>net.shibboleth.tool</groupId>
+                    <artifactId>xmlsectool</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
