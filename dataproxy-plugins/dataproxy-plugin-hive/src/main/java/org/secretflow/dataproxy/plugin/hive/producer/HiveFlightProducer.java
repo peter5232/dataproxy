@@ -33,6 +33,7 @@ import org.secretflow.v1alpha1.kusciaapi.Flightinner;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -50,7 +51,6 @@ public class HiveFlightProducer extends NoOpFlightProducer implements DataProxyF
         final Any any = GrpcUtils.parseOrThrow(descriptor.getCommand());
         try {
             boolean isPut = false;
-
             HiveCommandConfig<?> commandConfig = switch (any.getTypeUrl()) {
                 case "type.googleapis.com/kuscia.proto.api.v1alpha1.datamesh.CommandDataMeshSqlQuery" ->
                         new HiveParamConverter().convert(any.unpack(Flightinner.CommandDataMeshSqlQuery.class));
@@ -144,6 +144,7 @@ public class HiveFlightProducer extends NoOpFlightProducer implements DataProxyF
         log.info("end");
     }
 
+    @Override
     public Runnable acceptPut(
             CallContext context, FlightStream flightStream, StreamListener<PutResult> ackStream
     ) {

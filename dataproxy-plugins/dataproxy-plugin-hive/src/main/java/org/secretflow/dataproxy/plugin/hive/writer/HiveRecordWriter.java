@@ -229,9 +229,9 @@ public class HiveRecordWriter implements Writer {
     private void preProcessing(Connection hive, String tableName) throws SQLException {
         if(!isExistsTable(hive, tableName)) {
             createTableFromSchema(hive, commandConfig.getResultSchema(), tableName);
-            log.info("odps table is not exists, create table successful, table name: {}", tableName);
+            log.info("hive table is not exists, create table successful, table name: {}", tableName);
         } else {
-            log.info("odps table is exists, table name: {}", tableName);
+            log.info("hive table is exists, table name: {}", tableName);
         }
     }
 
