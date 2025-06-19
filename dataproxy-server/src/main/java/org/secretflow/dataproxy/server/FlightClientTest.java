@@ -1,6 +1,7 @@
 package org.secretflow.dataproxy.server;
 
 import com.google.protobuf.Any;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.arrow.flight.*;
 import org.apache.arrow.memory.BufferAllocator;
 import org.apache.arrow.memory.RootAllocator;
@@ -24,10 +25,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class FlightClientTest {
     private FlightClient client;
     protected BufferAllocator allocator;
-    private final int batchSize = 100;
+    private final int batchSize = 5;
     private final int batchCount = 10;
 
     public FlightClientTest() {
@@ -82,6 +84,7 @@ public class FlightClientTest {
             FlightClient.ClientStreamListener clientStreamListener = client.startPut(descriptor, root, new AsyncPutListener());
             clientStreamListener.setUseZeroCopy(true);
             for (int i = 0; i < batchCount; i++) {
+                log.info("1");
                 writeTestData(root, batchSize);
                 clientStreamListener.putNext();
             }
@@ -94,7 +97,7 @@ public class FlightClientTest {
             Domaindatasource.DatabaseDataSourceInfo
                     .newBuilder()
                     .setDatabase("dataproxy_alice")
-                    .setEndpoint("localhost:10000")
+                    .setEndpoint("127.0.0.1:10000")
                     .setUser("")
                     .setPassword("")
                     .build();
@@ -119,7 +122,7 @@ public class FlightClientTest {
             Domaindata.DomainData.newBuilder()
                     .setDatasourceId("datasourceId")
                     .setName("domainDataName")
-                    .setRelativeUri("test_table")
+                    .setRelativeUri("integration_test_table")
                     .setDomaindataId("domainDataId")
                     .setType("table")
                     .addAllColumns(columns)
@@ -135,6 +138,7 @@ public class FlightClientTest {
                                 .build())
                         .build();
         this.testDoPut(commandDataMeshUpdate);
+        log.info("exit ");
     }
     private void testDoPut(final Flightinner.CommandDataMeshUpdate msg) {
             FlightDescriptor flightDescriptor = FlightDescriptor.command(Any.pack(msg).toByteArray());
@@ -143,7 +147,6 @@ public class FlightClientTest {
             Ticket ticket = flightInfo.getEndpoints().get(0).getTicket();
             FlightDescriptor descriptor = FlightDescriptor.command(ticket.getBytes());
             writeTestDataWithTable(msg, descriptor);
-
     }
 
 
