@@ -31,7 +31,7 @@ public class HiveUtil {
                 conn = DriverManager.getConnection(String.format("jdbc:hive2://%s:%s/%s", ip, port, config.database()));
             }
         } catch (Exception e) {
-            System.out.println("database init error");
+            System.out.printf("database init error %s", e.getMessage());
             throw new RuntimeException(e);
         }
 
